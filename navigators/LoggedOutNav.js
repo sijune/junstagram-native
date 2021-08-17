@@ -9,7 +9,14 @@ const Stack = createStackNavigator();
 export default function LoggedOutNav() {
   return (
     // 전역 설정 가능
-    <Stack.Navigator screenOptions={{ headerBackTitleVisible: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+        headerTitle: false,
+        headerTransparent: true,
+        headerTintColor: "white",
+      }}
+    >
       {/* 개별 설정 가능 */}
       <Stack.Screen
         name="Welcome"
@@ -17,15 +24,7 @@ export default function LoggedOutNav() {
         component={Welcome}
       />
       <Stack.Screen name="LogIn" component={LogIn} />
-      <Stack.Screen
-        name="CreateAccount"
-        options={{
-          headerTitle: false,
-          headerTransparent: true,
-          headerTintColor: "white",
-        }}
-        component={CreateAccount}
-      />
+      <Stack.Screen name="CreateAccount" component={CreateAccount} />
     </Stack.Navigator>
   );
 }
