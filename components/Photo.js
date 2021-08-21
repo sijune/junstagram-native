@@ -62,9 +62,9 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
   const [imageHeight, setImageHeight] = useState(height - 450); //기초세팅
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height / 2); //height 로딩되었을 때 재세팅
+      setImageHeight(height / 3); //height 로딩되었을 때 재세팅
     });
-  }, [file]);
+  }, [file]); //file명이 동일한 경우는 useEffect를 건너뛴다.
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -97,9 +97,15 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
     },
     update: updateToggleLike,
   });
+  const goToProfile = () => {
+    navigation.navigate("Profile", {
+      username: user.username,
+      id: user.id,
+    });
+  };
   return (
     <Container>
-      <Header onPress={() => navigation.navigate("Profile")}>
+      <Header onPress={goToProfile}>
         <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
         <Username>{user.username}</Username>
       </Header>
@@ -121,13 +127,17 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
             <Ionicons name="chatbubble-outline" size={22} />
           </Action>
         </Actions>
-        <TouchableOpacity onPress={() => navigation.navigate("Likes")}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Likes", {
+              photoId: id,
+            })
+          }
+        >
           <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
-          <Username onPress={() => navigation.navigate("Profile")}>
-            {user.username}
-          </Username>
+          <Username onPress={goToProfile}>{user.username}</Username>
           <CaptionText>{caption}</CaptionText>
         </Caption>
       </ExtraContainer>

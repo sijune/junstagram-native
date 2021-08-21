@@ -4,7 +4,12 @@ import { Text, View } from "react-native";
 export default function Notification() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Notification</Text>
+      <TouchableOpacity onPress={() => logUserOut()}>
+        <Text>Me</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => client.cache.evict({})}>
+        <Text>cache clean</Text>
+      </TouchableOpacity>
     </View>
   );
 }

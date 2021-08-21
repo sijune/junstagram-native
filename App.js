@@ -34,6 +34,7 @@ export default function App() {
     await persistCache({
       cache,
       storage: new AsyncStorageWrapper(AsyncStorage),
+      //serialize: false, //query 변경 시 충돌을 막아준다
     });
     return preloadAssets(); //제일 먼저 token 여부, 즉 로그인이 되어 있는 지부터 체크한다.
   };
