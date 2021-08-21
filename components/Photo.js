@@ -1,4 +1,4 @@
-import { useReactiveVar } from "@apollo/client";
+import { gql, useMutation, useReactiveVar } from "@apollo/client";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components/native";
@@ -6,6 +6,15 @@ import { useNavigation } from "@react-navigation/native";
 import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
+
+const TOGGLE_LIKE_MUTATION = gql`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`;
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -56,6 +65,38 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
       setImageHeight(height / 2); //height 로딩되었을 때 재세팅
     });
   }, [file]);
+  const updateToggleLike = (cache, result) => {
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    if (ok) {
+      const photoId = `Photo:${id}`;
+      // apollo 3 에서 추가된 내용
+      cache.modify({
+        id: photoId,
+        fields: {
+          //함수로 이전의 값을 넘긴다.
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE_MUTATION, {
+    variables: {
+      id,
+    },
+    update: updateToggleLike,
+  });
   return (
     <Container>
       <Header onPress={() => navigation.navigate("Profile")}>
@@ -69,7 +110,7 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
       />
       <ExtraContainer>
         <Actions>
-          <Action>
+          <Action onPress={toggleLikeMutation}>
             <Ionicons
               name={isLiked ? "heart" : "heart-outline"}
               color={isLiked ? "tomato" : "black"}
