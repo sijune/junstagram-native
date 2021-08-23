@@ -11,7 +11,7 @@ export default function Me({ navigation }) {
     navigation.setOptions({
       title: data?.me?.username,
     });
-  });
+  }, []);
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity>

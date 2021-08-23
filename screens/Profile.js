@@ -10,7 +10,7 @@ export default function Profile({ navigation, route }) {
         title: route.params.username,
       });
     }
-  });
+  }, []);
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Profile</Text>

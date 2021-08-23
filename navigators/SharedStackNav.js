@@ -6,7 +6,7 @@ import Likes from "../screens/Likes";
 import Comments from "../screens/Comments";
 import Me from "../screens/Me";
 import Notification from "../screens/Notification";
-import Photo from "../screens/Photo";
+import SearchPhoto from "../screens/SearchPhoto";
 import Profile from "../screens/Profile";
 import Search from "../screens/Search";
 
@@ -47,7 +47,7 @@ export default function SharedStackNav({ screenName }) {
       ) : null}
       {screenName === "Me" ? <Stack.Screen name="Me" component={Me} /> : null}
       <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Photo" component={Photo} />
+      <Stack.Screen name="SearchPhoto" component={SearchPhoto} />
       <Stack.Screen name="Likes" component={Likes} />
       <Stack.Screen name="Comments" component={Comments} />
     </Stack.Navigator>

@@ -11,7 +11,7 @@ export default function ScreenLayout({ loading, children }) {
         backgroundColor: "white",
       }}
     >
-      {false ? <ActivityIndicator /> : children}
+      {loading ? <ActivityIndicator /> : children}
     </View>
   );
 }
