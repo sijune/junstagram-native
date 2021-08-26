@@ -28,7 +28,6 @@ const SEE_PHOTO = gql`
 `;
 
 export default function SearchPhoto({ route }) {
-  console.log(route?.params?.photoId);
   const { data, loading, refetch } = useQuery(SEE_PHOTO, {
     variables: {
       id: route?.params?.photoId,
@@ -40,7 +39,6 @@ export default function SearchPhoto({ route }) {
     await refetch();
     setRefreshing(false);
   };
-  console.log(data?.seePhoto);
   return (
     <ScreenLayout loading={loading}>
       <ScrollView

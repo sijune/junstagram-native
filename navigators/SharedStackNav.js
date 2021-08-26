@@ -17,9 +17,9 @@ export default function SharedStackNav({ screenName }) {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerStyle: {
-          borderBottomWidth: "1px",
-        },
+        // headerStyle: {
+        //   borderBottomWidth: "1px",
+        // },
       }}
     >
       {screenName === "Feed" ? (

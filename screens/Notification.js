@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
-import client from "../apollo";
+import client, { logUserOut } from "../apollo";
 
 export default function Notification() {
   return (

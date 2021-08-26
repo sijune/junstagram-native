@@ -3,11 +3,10 @@ import { useEffect } from "react";
 import { Text, View } from "react-native";
 
 export default function Profile({ navigation, route }) {
-  console.log(navigation, route);
   useEffect(() => {
     if (route?.params?.username) {
       navigation.setOptions({
-        title: route.params.username,
+        title: `${route.params.username}'s profile`,
       });
     }
   }, []);

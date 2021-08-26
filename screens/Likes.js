@@ -21,7 +21,9 @@ export default function Likes({ route }) {
       id: route?.params?.photoId,
     },
     skip: !route?.params?.photoId, //없으면 스킵
+    fetchPolicy: "no-cache",
   });
+  console.log(data);
   const renderUser = ({ item: user }) => <UserRow {...user} />;
   const onRefresh = async () => {
     setRefreshing(true);
