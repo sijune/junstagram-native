@@ -66,7 +66,6 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
     });
   }, [file]); //file명이 동일한 경우는 useEffect를 건너뛴다.
   const updateToggleLike = (cache, result) => {
-    console.log(result);
     const {
       data: {
         toggleLike: { ok },
@@ -112,7 +111,7 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
       </Header>
       <File
         resizeMode="cover"
-        style={{ width, height: imageHeight }}
+        style={{ width, height: width }}
         source={{ uri: file }}
       />
       <ExtraContainer>

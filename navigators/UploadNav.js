@@ -29,7 +29,10 @@ export default function UploadNav() {
           >
             <Stack.Screen
               name="Select"
-              options={{ title: "Choose a photo" }}
+              options={{
+                title: "Choose a photo",
+                headerBackTitleVisible: false,
+              }}
               component={SelectPhoto}
             ></Stack.Screen>
           </Stack.Navigator>

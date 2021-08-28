@@ -1,12 +1,19 @@
 import React from "react";
 import { useEffect } from "react";
-import { FlatList, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import styled from "styled-components/native";
 import * as MediaLibrary from "expo-media-library";
 import { useState } from "react";
-import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
+import { StatusBar } from "expo-status-bar";
 
 const Container = styled.View`
   flex: 1;
@@ -49,15 +56,15 @@ export default function SelectPhoto({ navigation }) {
   };
   //권한체크
   const getPermissions = async () => {
-    const { accessPrivileges, canAskAgain } =
-      await MediaLibrary.getPermissionsAsync();
-    if (accessPrivileges === "none" && canAskAgain) {
-      const { accessPrivileges } = await MediaLibrary.requestPermissionsAsync();
-      if (accessPrivileges !== "none") {
+    const { granted, canAskAgain } = await MediaLibrary.getPermissionsAsync();
+    if (!granted && canAskAgain) {
+      //const { granted } = await MediaLibrary.requestPermissionsAsync();
+      const { granted } = await MediaLibrary.requestPermissionsAsync();
+      if (granted) {
         setOk(true);
         getPhotos();
       }
-    } else if (accessPrivileges !== "none") {
+    } else if (granted) {
       setOk(true);
       getPhotos();
     }
@@ -67,7 +74,13 @@ export default function SelectPhoto({ navigation }) {
     setChosenPhoto(uri);
   };
   const HeaderRight = () => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("UploadForm", {
+          file: chosenPhoto,
+        })
+      }
+    >
       <HeaderRightText> Next </HeaderRightText>
     </TouchableOpacity>
   );
@@ -79,7 +92,7 @@ export default function SelectPhoto({ navigation }) {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, []);
+  }, [chosenPhoto]); //한번 마운트되면 실행되기 때문에 특정 변수 지정한다.
   const renderItem = ({ item: photo }) => (
     <ImageContainer onPress={() => choosePhoto(photo.uri)}>
       <Image
@@ -97,6 +110,7 @@ export default function SelectPhoto({ navigation }) {
   );
   return (
     <Container>
+      <StatusBar hidden={false} />
       <Top>
         {chosenPhoto !== "" ? (
           <Image
