@@ -11,17 +11,22 @@ export default function MessageNav() {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        headerBackImage: ({ tintColor }) => (
-          <Ionicons
-            color={tintColor}
-            name="close"
-            size={28}
-            style={{ marginLeft: 10 }}
-          />
-        ),
       }}
     >
-      <Stack.Screen name="Rooms" component={Rooms} />
+      <Stack.Screen
+        name="Rooms"
+        options={{
+          headerBackImage: ({ tintColor }) => (
+            <Ionicons
+              color={tintColor}
+              name="close"
+              size={28}
+              style={{ marginLeft: 10 }}
+            />
+          ),
+        }}
+        component={Rooms}
+      />
       <Stack.Screen name="Room" component={Room} />
     </Stack.Navigator>
   );
