@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import React from "react";
 import { useEffect } from "react";
@@ -9,6 +9,20 @@ import ScreenLayout from "../components/ScreenLayout";
 import useMe from "../hooks/useMe";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../colors";
+
+const ROOM_UPDATES = gql`
+  subscription roomUpdates($id: Int!) {
+    roomUpdates(id: $id) {
+      id
+      payload
+      user {
+        username
+        avatar
+      }
+      read
+    }
+  }
+`;
 
 const ROOM_QUERY = gql`
   query seeRoom($id: Int!) {
@@ -75,11 +89,62 @@ const TextInput = styled.TextInput`
 const SendButton = styled.TouchableOpacity``;
 
 export default function Room({ route, navigation }) {
-  const { data, loading } = useQuery(ROOM_QUERY, {
+  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
   });
+  const client = new useApolloClient();
+  //listen 중인 subscription이 업데이트 되면 실행되는 부분 - 캐시업데이트
+  const updateQuery = (prevQuery, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdates: message },
+      },
+    } = options;
+    if (message.id) {
+      const incomingMessage = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              username
+              avatar
+            }
+            read
+          }
+        `,
+        data: message,
+      });
+
+      client.cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          messages(prev) {
+            const existingMessage = prev.find(
+              (aMessage) => aMessage.__ref === incomingMessage.__ref
+            );
+            if (existingMessage) {
+              return prev;
+            }
+            return [...prev, incomingMessage];
+          },
+        },
+      });
+    }
+  };
+  useEffect(() => {
+    if (data?.seeRoom) {
+      subscribeToMore({
+        document: ROOM_UPDATES,
+        variables: {
+          id: route?.params?.id,
+        },
+        updateQuery, //이후 실행할 것을 정의한다.
+      });
+    }
+  }, [data]);
   const { register, handleSubmit, setValue, getValues, watch } = useForm();
   const { data: meData } = useMe();
   const updateSendMessage = (cache, result) => {

@@ -3,12 +3,17 @@ import {
     createHttpLink,
     InMemoryCache,
     makeVar,
+    split,
 } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setContext } from "@apollo/client/link/context";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import {
+    getMainDefinition,
+    offsetLimitPagination,
+} from "@apollo/client/utilities";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
+import { WebSocketLink } from "@apollo/client/link/ws";
 
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar("");
@@ -84,8 +89,35 @@ export const cache = new InMemoryCache({
     },
 });
 
+// webSocket서버 설정
+const wsLink = new WebSocketLink({
+    uri: "ws://localhost:4000/graphql",
+    options: {
+        reconnect: true,
+        // token을 한번이 아닌 계속 호출한다.
+        connectionParams: () => ({
+            //백엔드 onConnect()와 함께 인증에 사용
+            token: tokenVar(),
+        }),
+    },
+});
+
+const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
+
+const splitLink = split(
+    ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+            definition.kind === "OperationDefinition" &&
+            definition.operation === "subscription"
+        );
+    },
+    wsLink,
+    httpLinks
+);
+
 const client = new ApolloClient({
-    link: authLink.concat(onErrorLink).concat(uploadHttpLink),
+    link: splitLink,
     cache,
 });
 
