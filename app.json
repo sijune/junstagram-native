@@ -18,12 +18,16 @@
             "**/*"
         ],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "bundleIdentifier": "com.sj.junstagram",
+            "buildNumber": "1.0.0"
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#FFFFFF"
+                "backgroundColor": "#FFFFFF",
+                "package": "com.sj.junstagram",
+                "versionCode": 1
             }
         },
         "web": {
