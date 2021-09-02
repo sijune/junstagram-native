@@ -25,10 +25,10 @@
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#FFFFFF",
-                "package": "com.sj.junstagram",
-                "versionCode": 1
-            }
+                "backgroundColor": "#FFFFFF"
+            },
+            "package": "com.sj.junstagram",
+            "versionCode": 1
         },
         "web": {
             "favicon": "./assets/favicon.png"

@@ -94,6 +94,7 @@ export default function UploadForm({ route, navigation }) {
       name: `1.jpg`,
       type: "image/jpeg",
     });
+    console.log(file);
     uploadPhotoMutation({
       variables: {
         caption,
