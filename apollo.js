@@ -33,12 +33,12 @@ export const logUserOut = async(token) => {
 };
 
 const httpLink = createHttpLink({
-    uri: "https://weak-vampirebat-52.loca.lt/graphql",
+    uri: "https://justagram-backend.herokuapp.com/graphql",
 });
 
 //createUploadLink를 사용해야 백엔드에서 받을 수 있는 파일로 전송 가능
 const uploadHttpLink = createUploadLink({
-    uri: "http://localhost:4000/graphql",
+    uri: "https://justagram-backend.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -91,7 +91,7 @@ export const cache = new InMemoryCache({
 
 // webSocket서버 설정
 const wsLink = new WebSocketLink({
-    uri: "ws://localhost:4000/graphql",
+    uri: "ws://popular-swan-70.loca.lt/graphql",
     options: {
         reconnect: true,
         // token을 한번이 아닌 계속 호출한다.
