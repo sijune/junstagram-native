@@ -35,6 +35,7 @@ export default function Feed({ navigation }) {
     variables: {
       offset: 0,
     },
+    fetchPolicy: "no-cache",
   });
 
   const renderPhoto = ({ item: photo }) => {
